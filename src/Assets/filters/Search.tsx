@@ -1,17 +1,17 @@
 import { CiSearch } from "react-icons/ci";
 import { filterBySearch } from "../../utils/filterUtils";
-import { useProductsContext } from "../../contexts";
 import { useEffect, useState } from "react";
-import CartItemCard from "../cart/CartItemCard";
+
 import { useLocation, useNavigate } from "react-router-dom";
-import spinningLoaders from "../../assets/loaderBlack.svg";
+import productViewModel from "../../Components/Products/ProductViewModel";
+import CartItemCard from "../Cart/CartItemCard";
+import  { Product } from "../../Components/Products/ProductModel";
+
 const Search = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const { allProducts, applyFilters } = useProductsContext();
   const [search, setSearch] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData, setFilteredData] = useState<Product[]>([]);
   const [showList, setShowList] = useState(true);
   const [searching, setSearching] = useState(false);
 
@@ -20,29 +20,30 @@ const Search = () => {
       setSearch("");
     }
   }, [location]);
-  useEffect(() => {
-    setSearching(true);
-    let id;
-    id = setTimeout(() => {
-      setFilteredData(filterBySearch(search, allProducts));
-      setSearching(false);
-      if (location?.pathname === "/products" && !search) {
-        applyFilters("searchText", search);
-      }
-    }, 500);
+  // useEffect(() => {
+  //   setSearching(true);
+  //   let id: any;
+  //   id = setTimeout(() => {
+  //     setFilteredData(filterBySearch(search, productViewModel.products));
+  //     setSearching(false);
+  //     if (location?.pathname === "/products" && !search) {
+  //       applyFilters("searchText", search);
+  //     }
+  //   }, 500);
 
-    return () => {
-      clearTimeout(id);
-    };
-  }, [search]);
+  //   return () => {
+  //     clearTimeout(id);
+  //   };
+  // }, [search]);
 
-  const changeHandler = (e) => {
+  const changeHandler = (e: any) => {
     setSearch(e.target.value);
     if (!showList) setShowList(true);
   };
-  const submitHandler = (e) => {
+  const submitHandler = (e: any) => {
     e.preventDefault();
-    applyFilters("searchText", search);
+
+    productViewModel.setSearchText(search)
     setShowList(false);
     navigate("/products");
   };
@@ -67,11 +68,11 @@ const Search = () => {
         <ul className="absolute bg-amber-50 w-full max-h-72 overflow-auto rounded-b-md z-10">
           {searching ? (
             <li className="h-10 flex items-center justify-center">
-              <img src={'spinningLoaders'} alt="Searching..." />
+              <img src={`./assets/loaderBlack.svg`} alt="Searching..." />
             </li>
           ) : filteredData.length ? (
-            filteredData.map((product) => (
-              <li key={product._id} className="">
+            filteredData.map((product: Product) => (
+              <li key={product.id} className="">
                 <CartItemCard
                   product={product}
                   isSearch={true}

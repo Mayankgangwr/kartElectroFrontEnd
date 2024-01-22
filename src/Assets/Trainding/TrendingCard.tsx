@@ -15,7 +15,7 @@ const TrendingCard: React.FC<TrendingCardProps> = ({ product }) => {
       <div className="flex justify-between gap-3 xs:flex-wrap xs:justify-center sm:flex-nowrap sm:justify-between">
         <div>
           <h1 className="text-xl xs:text-base sm:text-xl font-bold">
-            {product.title}
+            {product.title.split(' ').slice(0, 3).join(' ')}
           </h1>
         </div>
         <div className="flex flex-col items-start ">
@@ -31,7 +31,7 @@ const TrendingCard: React.FC<TrendingCardProps> = ({ product }) => {
               )}
             </button>
           </div>
-          <p className="text-gray-600 text-sm text-end">{product.category}</p>
+          <p className="text-gray-600 text-sm text-end">{product.category.split(' ').slice(0, 1).join(' ')}</p>
         </div>
       </div>
       <div className="flex justify-center items-center w-full h-full">

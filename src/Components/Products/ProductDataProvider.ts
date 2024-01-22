@@ -25,6 +25,19 @@ export const fetchProductData = async (endpoint: string, authToken?: string, pay
     throw error;
   }
 };
+export const getSinglrProduct = async (endpoint: string, authToken?: string, payload?: any) => {
+  try {
+    const config: AxiosRequestConfig = {
+      headers: { ...getProductDefaultHeaders(authToken) },
+      data: { ...productDefaultPayload, ...payload },
+    };
+    const response = await productApiClient.get(endpoint, config);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching data from ${endpoint}:`, error);
+    throw error;
+  }
+};
 
 export const postProductData = async (endpoint: string, data: any, authToken?: string, payload?: any) => {
   try {

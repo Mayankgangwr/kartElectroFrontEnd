@@ -14,11 +14,10 @@ const Home: React.FC =() => {
     }, []);
     return (
         <>
-            <div style={{ paddingTop: "70px" }}>
+            <div style={{ paddingTop: "80px" }}>
                 <Banner catRef={catRef} />
                 {productViewModel.products.length > 0 && <TrendingList products={productViewModel.products} />}
                 {categoryViewModel.categories.length > 0 && <CategoryList catRef={catRef} categories={categoryViewModel.categories} />}
-
                 <Footer />
             </div >
         </>

@@ -5,13 +5,22 @@ import { MdOutlineExplore } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 import MenuDropdown from "./MenuDropdown";
 import Logo from "./Logo";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { observer } from "mobx-react";
+import Cookies from "js-cookie";
+import authModel from "../../Components/Auth/AuthModel";
+import productViewModel from "../../Components/Products/ProductViewModel";
+import cartViewModel from "../../Components/Cart/CartViewModel";
+// import Search from "../filters/Search";
 const Nav: React.FC = () => {
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3NWU0ZTIxOC1kZjdjLTQwMWQtOGY0OS0zNmRiOTY4YTY5NWMiLCJlbWFpbCI6Imtvb2tpZUBiYW5ndGFuLmNvbSJ9.lBB1XqLJMVBSOeUou3bFzn - eSIu1ejqzk2dprxxhak8";
-    const cart = [1, 2];
-    const wishlist = [];
-
+    useEffect(() => {
+        if (Cookies.get('authToken')) {
+            authModel.token = Cookies.get('authToken');
+        }
+        productViewModel.fetchProducts();
+        cartViewModel.getCartItems();
+    }, []);
+    const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [colorChange, setColorChange] = useState(false);
     const changeNavbarColor = () => {
@@ -49,8 +58,8 @@ const Nav: React.FC = () => {
                     </section>
 
                     {/* <div className="hidden  sm:block sm:w-1/3 relative">
-                    <Search AllProducts={productViewModel.products} />
-                </div> */}
+                        <Search />
+                    </div> */}
 
                     <section className="flex items-center">
                         <a
@@ -63,23 +72,25 @@ const Nav: React.FC = () => {
                         <ul className=" hidden md:flex justify-between text-2xl ps-1">
                             <li
                                 className="relative bg-gray-200  p-2 rounded-full hover:bg-yellow-800 hover:text-white cursor-pointer mx-2 transition shadow-sm"
-
+                                onClick={() => navigate("/wishlist")}
                             >
                                 <BsBookmarkHeart />
-                                {token && wishlist.length > 0 && (
+                                {authModel.token && cartViewModel.totalItems > 0 && (
                                     <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-rose-600 border-2 border-[--theme-color] rounded-full -top-2 -right-2 ">
-                                        {wishlist.length}
+                                        {cartViewModel.totalItems}
                                     </div>
                                 )}
                             </li>
                             <li
                                 className="relative bg-yellow-500 text-white p-2 rounded-full hover:bg-yellow-800 cursor-pointer mx-2 transition shadow-sm"
-
+                                onClick={() => {
+                                    navigate("/cart");
+                                }}
                             >
                                 <HiOutlineShoppingBag />
-                                {token && cart.length > 0 && (
+                                {authModel.token && cartViewModel.totalItems > 0 && (
                                     <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-rose-600 border-2 border-[--theme-color] rounded-full -top-2 -right-2 ">
-                                        {cart.length}
+                                        {cartViewModel.totalItems}
                                     </div>
                                 )}
                             </li>

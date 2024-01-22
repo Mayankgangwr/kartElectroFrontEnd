@@ -2,13 +2,12 @@ import { BiFilter } from "react-icons/bi";
 import { MdKeyboardArrowUp } from "react-icons/md";
 import { useEffect, useState } from "react";
 import productViewModel from "../Components/Products/ProductViewModel";
-import { Product } from "../Components/Products/ProductModel";
+import { IFilterData, Product } from "../Components/Products/ProductModel";
 import SingleProduct from "../Assets/Products/SingleProduct";
 import { observer } from "mobx-react";
 import Loader from "../Assets/loader/Loader";
 import Footer from "../Assets/footer/Footer";
-import SortBy from "../Assets/filters/SortBy";
-import Filters from "../Assets/filters/Filters";
+// import Filters from "../Assets/filters/Filters";
 
 const ProductListing: React.FC = () => {
   const [showScrollArrow, setShowScrollArrow] = useState(false);
@@ -23,7 +22,9 @@ const ProductListing: React.FC = () => {
     fetchData();
   }, []);
 
-
+  const handleFilterValues = (filteredData: IFilterData) => {
+    productViewModel.setFilterData(filteredData);
+  };
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -61,7 +62,7 @@ const ProductListing: React.FC = () => {
           <Loader />
         </div>
       ) : (
-        <div>
+        <div style={{ paddingTop: "80px" }}>
           <header className="mb-3">
             <img
               src={'../assets/bannerHero.jpg'}
@@ -72,10 +73,10 @@ const ProductListing: React.FC = () => {
           <section className="py-3 flex flex-col md:flex-row gap-2 justify-between">
             <h1 className="text-2xl font-bold">Electronice Products for You!</h1>
             <div className="flex items-center gap-2">
-              <Filters
+              {/* <Filters
                 isFilterOpen={isFilterOpen}
                 setIsFilterOpen={setIsFilterOpen}
-              />
+              /> */}
               <label>
                 <select
                   name="sortBy"
@@ -97,7 +98,10 @@ const ProductListing: React.FC = () => {
               <button
                 className={`flex py-1 px-2 rounded-md shadow-md items-center  gap-1 hover:bg-[--primary-text-color] hover:text-white hover:shadow-lg ${isFilterOpen ? "bg-[--primary-text-color] text-white" : ""
                   }`}
-                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                //onClick={() => setIsFilterOpen(!isFilterOpen)}
+                onClick={() => handleFilterValues({
+                  priceRange: "10-20", category: ""
+                })}
               >
                 <BiFilter className="text-lg" />
                 <span className="text-sm">Filters</span>
@@ -107,8 +111,8 @@ const ProductListing: React.FC = () => {
 
           {productViewModel.products.length > 0 ? (
             <main className="relative grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-              {productViewModel.products.map((glass: Product) => (
-                <SingleProduct key={glass.id} product={glass} />
+              {productViewModel.products.map((product: Product) => (
+                <SingleProduct key={product.id} product={product} />
               ))}
             </main>
           ) : (
@@ -120,6 +124,7 @@ const ProductListing: React.FC = () => {
             className={` fixed bottom-10 bg-gray-800 right-2 p-2 rounded-full text-xl shadow-2xl transition-all delay-100 ease-in-out ${showScrollArrow ? "block" : "hidden"
               }`}
             onClick={scrollToTop}
+            style={{ zIndex: '1' }}
           >
             <MdKeyboardArrowUp className=" text-white" />
           </button>

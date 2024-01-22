@@ -6,17 +6,17 @@ const categoryApiClient = axios.create({
   // You can add other default configuration options here
 });
 
-let categoryDefaultPayload: any = {}; // Set your default payload here
+let defaultPayload: any = {}; // Set your default payload here
 
 export const setCategoryDefaultPayload = (payload: any) => {
-  categoryDefaultPayload = payload;
+  defaultPayload = payload;
 };
 
 export const fetchCategoryData = async (endpoint: string, authToken?: string, payload?: any) => {
   try {
     const config: AxiosRequestConfig = {
       headers: { ...getCategoryDefaultHeaders(authToken) },
-      data: { ...categoryDefaultPayload, ...payload },
+      data: { ...defaultPayload, ...payload },
     };
     const response = await categoryApiClient.get(endpoint, config);
     return response.data;

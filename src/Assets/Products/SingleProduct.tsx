@@ -3,16 +3,48 @@ import { BsBookmarkHeart, BsFillBookmarkHeartFill } from "react-icons/bs";
 import { useLocation, useNavigate } from "react-router";
 import { notify } from "../../utils/utils";
 import { Product } from "../../Components/Products/ProductModel";
+import { useState } from "react";
+import authViewModel from "../../Components/Auth/AuthViewModel";
 interface TrendingListProps {
   key: number
   product: Product;
 }
-const SingleProduct: React.FC<TrendingListProps> = ({ product }) => {
-  const token = "";
-  const isInCart = 2;
+interface IsInCartProps {
+  productId: number
 
-  const navigate = useNavigate();
+}
+interface ICart {
+  Id: number;
+  Qty: number;
+}
+
+const SingleProduct: React.FC<TrendingListProps> = ({ product }) => {
+  const { token } = authViewModel;
+   const navigate = useNavigate();
   const location = useLocation();
+  const [carts, setCarts] = useState<ICart[]>([{ Id: 1, Qty: 4 }, { Id: 2, Qty: 5 }, { Id: 3, Qty: 3 }]);
+  const [wish, setWish] = useState<ICart[]>([{ Id: 1, Qty: 4 }, { Id: 2, Qty: 5 }, { Id: 3, Qty: 3 }]);
+  const isInCart = ({ productId }: any) => {
+    return carts.find((item: ICart) => item.Id === productId) ? true : false;
+  }
+  const isInWish = ({ productId }: any) => {
+    return wish.find((item: ICart) => item.Id === productId) ? true : false;
+  }
+  const addProductToWishlist = (productId: any) => {
+    const newItem = { Id: productId, Qty: 1 };
+    setWish([...wish, newItem]);
+  }
+  const deleteProductFromWishlist = (productId: any) => {
+    setWish(wish.filter(item => item.Id !== productId));
+  }
+
+  const addProductToCart = (productId: any) => {
+    const newItem = { Id: productId, Qty: 1 };
+    setCarts([...carts, newItem]);
+  }
+
+  const inCart = isInCart(product.id);
+  const inWish = isInWish(product.id);
 
   return (
     <div
@@ -66,15 +98,15 @@ const SingleProduct: React.FC<TrendingListProps> = ({ product }) => {
                 navigate("/login", { state: { from: location.pathname } });
                 notify("warn", "Please Login to continue");
               } else {
-                // if (!inCart) {
-                //   addProductToCart(product);
-                // } else {
-                //   navigate("/cart");
-                // }
+                if (carts.find((item: ICart) => item.Id === product.id)) {
+                  navigate("/cart");
+                } else {
+                  addProductToCart(product.id);
+                }
               }
             }}
           >
-            {/* {inCart ? "Go to Bag" : "Add to Bag"} */}
+            {carts.find((item: ICart) => item.Id === product.id) ? "Go to Cart" : "Add to Cart"}
           </button>
           <button
             // disabled={disableWish}
@@ -84,20 +116,20 @@ const SingleProduct: React.FC<TrendingListProps> = ({ product }) => {
                 navigate("/login", { state: { from: location.pathname } });
                 notify("warn", "Please Login to continue");
               } else {
-                // if (product?.inWish) {
-                //   deleteProductFromWishlist(product._id);
-                // } else {
-                //   addProductToWishlist(product);
-                // }
+                if (wish.find((item: ICart) => item.Id === product.id)) {
+                  deleteProductFromWishlist(product.id);
+                } else {
+                  addProductToWishlist(product.id);
+                }
               }
             }}
           >
-            {/* {product.inWish ? (
+            {wish.find((item: ICart) => item.Id === product.id) ? (
               <BsFillBookmarkHeartFill className="text-xl text-rose-600 hover:shadow-md transition" />
             ) : (
-              
-            )} */}
-            <BsBookmarkHeart className="text-xl hover:text-rose-600 hover:shadow-md transition" />
+                <BsBookmarkHeart className="text-xl hover:text-rose-600 hover:shadow-md transition" />
+            )}
+          
           </button>
         </div>
       </div>

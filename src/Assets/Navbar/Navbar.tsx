@@ -10,8 +10,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3NWU0ZTIxOC1kZjdjLTQwMWQtOGY0OS0zNmRiOTY4YTY5NWMiLCJlbWFpbCI6Imtvb2tpZUBiYW5ndGFuLmNvbSJ9.lBB1XqLJMVBSOeUou3bFzn - eSIu1ejqzk2dprxxhak8";
-    const cart = [];
-    const wishlist = [];
+    const cart = [0,0];
+    const wishlist = [0,0];
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [colorChange, setColorChange] = useState(false);
@@ -74,7 +74,10 @@ const Navbar = () => {
                         </li>
                         <li
                             className="relative bg-yellow-500 text-white p-2 rounded-full hover:bg-yellow-800 cursor-pointer mx-2 transition shadow-sm"
-                            onClick={() => navigate("/cart")}
+                            onClick={() => {
+                                alert('cart');
+                                navigate("/cart");
+                            }}
                         >
                             <HiOutlineShoppingBag />
                             {token && cart.length > 0 && (
