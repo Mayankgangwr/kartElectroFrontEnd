@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Logo: React.FC = () => {
   return (
     <Link to="/">
-      <div className="font-monoton text-3xl hover:text-red-800 cursor-pointer text-center transition" style={{ fontSize: '16px' }}>
+      <div className="font-monoton text-3xl hover:text-red-800 cursor-pointer text-center transition" style={{ fontSize: '25px' }}>
         Kart Electro
       </div>
     </Link>

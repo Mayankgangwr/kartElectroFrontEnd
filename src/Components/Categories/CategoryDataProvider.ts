@@ -30,7 +30,7 @@ export const postCategoryData = async (endpoint: string, data: any, authToken?: 
   try {
     const config: AxiosRequestConfig = {
       headers: { ...getCategoryDefaultHeaders(authToken) },
-      data: { ...categoryDefaultPayload, ...payload },
+      data: { ...setCategoryDefaultPayload, ...payload },
     };
     const response = await categoryApiClient.post(endpoint, data, config);
     return response.data;
